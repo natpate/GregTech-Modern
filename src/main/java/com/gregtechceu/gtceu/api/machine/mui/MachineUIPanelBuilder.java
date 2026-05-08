@@ -2,7 +2,6 @@ package com.gregtechceu.gtceu.api.machine.mui;
 
 import com.gregtechceu.gtceu.api.capability.IControllable;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.machine.feature.IHasBatterySlot;
 import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
 import com.gregtechceu.gtceu.api.machine.trait.feature.IAttachConfiguratorsTrait;
@@ -65,9 +64,6 @@ public class MachineUIPanelBuilder {
         if (addDefaultConfigurators) {
             if (machine instanceof IControllable controllable) {
                 attachRight.child(GTMuiWidgets.createPowerButton(controllable));
-            }
-            if (machine instanceof IHasBatterySlot batterySlot) {
-                attachRight.child(GTMuiWidgets.createBatterySlot(batterySlot, syncManager));
             }
             if (machine instanceof IVoidable voidable) {
                 attachRight.child(GTMuiWidgets.createVoidingButton(voidable));
