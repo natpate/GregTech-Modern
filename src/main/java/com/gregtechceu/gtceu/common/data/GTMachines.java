@@ -21,6 +21,7 @@ import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderHelper;
 import com.gregtechceu.gtceu.client.util.TooltipHelper;
 import com.gregtechceu.gtceu.common.data.machines.*;
 import com.gregtechceu.gtceu.common.data.models.GTModels;
+import com.gregtechceu.gtceu.common.machine.MachineInstanceFactories;
 import com.gregtechceu.gtceu.common.machine.electric.*;
 import com.gregtechceu.gtceu.common.machine.muimachine.TestMuiMachine;
 import com.gregtechceu.gtceu.common.machine.muimachine.TestMuiMachine2;
@@ -183,7 +184,7 @@ public class GTMachines {
             GTRecipeTypes.ALLOY_SMELTER_RECIPES).register();
 
     public static final MachineDefinition[] ARC_FURNACE = registerTieredMachines("arc_furnace",
-            (holder, tier) -> new SimpleTieredMachine(holder, tier, defaultTankSizeFunction), (tier, builder) -> builder
+            SimpleTieredMachine::new, (tier, builder) -> builder
                     .langValue("%s Arc Furnace %s".formatted(VLVH[tier], VLVT[tier]))
                     .ui(GTSingleblockMachinePanels.ARC_FURNACE)
                     // .editableUI(SimpleTieredMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("arc_furnace"),
@@ -285,7 +286,7 @@ public class GTMachines {
             .hasPollutionDebuff(true)
             .register();
     public static final MachineDefinition[] MACERATOR = registerTieredMachines("macerator",
-            (holder, tier) -> new SimpleTieredMachine(holder, tier, defaultTankSizeFunction), (tier, builder) -> builder
+            SimpleTieredMachine::new, (tier, builder) -> builder
                     .langValue("%s Macerator %s".formatted(VLVH[tier], VLVT[tier]))
                     .ui(GTSingleblockMachinePanels.MACERATOR)
                     .rotationState(RotationState.NON_Y_AXIS)
@@ -308,7 +309,7 @@ public class GTMachines {
             .register();
 
     public static final MachineDefinition[] ROCK_CRUSHER = registerTieredMachines("rock_crusher",
-            RockCrusherMachine::new, (tier, builder) -> builder
+            MachineInstanceFactories.ROCK_CRUSHER, (tier, builder) -> builder
                     .langValue("%s Rock Crusher %s".formatted(VLVH[tier], VLVT[tier]))
                     .ui(GTSingleblockMachinePanels.GENERAL_MACHINE)
                     .rotationState(RotationState.NON_Y_AXIS)
