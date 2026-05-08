@@ -7,10 +7,10 @@ import com.gregtechceu.gtceu.api.cover.filter.Filter;
 import com.gregtechceu.gtceu.api.cover.filter.FilterHandler;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.feature.IHasBatterySlot;
-import com.gregtechceu.gtceu.api.machine.feature.IHasCircuitSlot;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
+import com.gregtechceu.gtceu.api.machine.trait.ProgrammableCircuitSlotTrait;
 import com.gregtechceu.gtceu.api.recipe.gui.GTRecipeTypeUILayout;
 import com.gregtechceu.gtceu.common.cover.data.BucketMode;
 import com.gregtechceu.gtceu.common.item.behavior.IntCircuitBehaviour;
@@ -256,11 +256,11 @@ public class GTMuiWidgets {
         return createCircuitSlotPanel(circuitSyncValue, syncManager);
     }
 
-    public static ButtonWidget<?> createCircuitSlotPanel(IHasCircuitSlot machine, ModularPanel<?> parentPanel,
+    public static ButtonWidget<?> createCircuitSlotPanel(ProgrammableCircuitSlotTrait circuitTrait, ModularPanel<?> parentPanel,
                                                          PanelSyncManager syncManager) {
         IntSyncValue circuitSyncValue = createCircuitSlotSyncValue(
-                i -> machine.getCircuitInventory().setStackInSlot(0, i),
-                () -> machine.getCircuitInventory().getStackInSlot(0));
+                i -> circuitTrait.storage.setStackInSlot(0, i),
+                () -> circuitTrait.storage.getStackInSlot(0));
         IPanelHandler circuitPanelHandler = syncManager.syncedPanel("circuit_panel", true,
                 (sm, sh) -> createCircuitSlotPanel(circuitSyncValue, sm)
                         .relative(parentPanel)
@@ -277,24 +277,24 @@ public class GTMuiWidgets {
                     return true;
                 })
                 .onMouseScrolled((x, y, delta) -> {
-                    int newValue = nextCircuitValue(machine.getCircuitInventory().getStackInSlot(0),
+                    int newValue = nextCircuitValue(circuitTrait.storage.getStackInSlot(0),
                             circuitSyncValue.getIntValue(), delta);
                     circuitSyncValue.setValue(newValue);
                     return true;
                 })
                 .overlay(new DynamicDrawable(() -> {
-                    if (machine.getCircuitInventory().getStackInSlot(0).isEmpty()) {
+                    if (circuitTrait.storage.getStackInSlot(0).isEmpty()) {
                         return new DrawableStack(new ItemDrawable(IntCircuitBehaviour.stack(0)),
                                 new ItemDrawable(Items.BARRIER)).asIcon().size(16);
                     }
-                    return new ItemDrawable(machine.getCircuitInventory().getStackInSlot(0))
+                    return new ItemDrawable(circuitTrait.storage.getStackInSlot(0))
                             .asIcon().size(16);
                 }))
                 .tooltipAutoUpdate(true)
                 .tooltipBuilder((r) -> r.addLine(IKey.lang(Component.translatable("metaitem.int_circuit.configuration",
-                        (machine.getCircuitInventory().getStackInSlot(0).isEmpty() ? 0 :
+                        (circuitTrait.storage.getStackInSlot(0).isEmpty() ? 0 :
                                 IntCircuitBehaviour
-                                        .getCircuitConfiguration(machine.getCircuitInventory().getStackInSlot(0)))))));
+                                        .getCircuitConfiguration(circuitTrait.storage.getStackInSlot(0)))))));
     }
 
     private static int nextCircuitValue(ItemStack stack, int current, double delta) {
@@ -311,10 +311,10 @@ public class GTMuiWidgets {
             }
         } else {
             if (stack.isEmpty() ||
-                    (current == 0 && !ConfigHolder.INSTANCE.machines.ghostCircuit)) {
+                    (current == 0)) {
                 // if at no circuit, loop around to max
                 return IntCircuitBehaviour.CIRCUIT_MAX;
-            } else if (current == 1 && ConfigHolder.INSTANCE.machines.ghostCircuit) {
+            } else if (current == 1) {
                 // if at 1, skip 0 and return no circuit
                 return -1;
             } else {
