@@ -82,6 +82,16 @@ public class FluidHatchPartMachine extends TieredIOPartMachine implements IPaint
         circuitSlot.setEnabled(io == IO.IN);
     }
 
+    public FluidHatchPartMachine(BlockEntityCreationInfo info, int tier, IO io, NotifiableFluidTank fluidTank) {
+        super(info, tier, io);
+        this.slots = fluidTank.getTanks();
+        this.tank = attachTrait(fluidTank);
+
+        this.circuitSlot = attachTrait(new ProgrammableCircuitSlotTrait());
+        circuitSlot.setEnabled(io == IO.IN);
+
+    }
+
     //////////////////////////////////////
     // ***** Initialization ******//
     //////////////////////////////////////
