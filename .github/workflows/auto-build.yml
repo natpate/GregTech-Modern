@@ -2,7 +2,7 @@ name: Latest Build
 
 on:
   push:
-    branches: ['1.20.1', '1.21']
+    branches: ['1.6.4-1.20.1', '1.21']
     paths: ['src/**', '**/*.gradle', 'gradle.properties']
 
 concurrency:
