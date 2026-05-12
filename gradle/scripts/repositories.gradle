@@ -3,11 +3,8 @@ repositories {
     mavenCentral()
 
     maven { // KubeJS and Rhino
-	
         forRepository { maven { url = "https://maven.latvian.dev/releases" } }
-	
         filter { includeGroup("dev.latvian.mods")}
-	
     }
 
     maven { // JEI
