@@ -3,8 +3,11 @@ repositories {
     mavenCentral()
 
     maven { // KubeJS and Rhino
-        name = "Saps.dev Maven"
-        url = "https://maven.saps.dev/minecraft"
+	
+        forRepository { maven { url = "https://maven.latvian.dev/releases" } }
+	
+        filter { includeGroup("dev.latvian.mods")}
+	
     }
 
     maven { // JEI
